@@ -60,15 +60,15 @@ public class Board {
     }
 
     public void printBoard(){
-        for(int i = 0; i < height; i++){
+        for(int i = 1; i <= height; i++){
             //print the o's line
-            for(int j = 0; j < width; j++){
+            for(int j = 1; j <= width; j++){
                 //last o
-                if(j == width - 1){
+                if(j == width){
                     System.out.println("o");
                 }
                 else{
-                    if(links.contains(new Link(i + 1, j + 1, i + 1, j + 2))){
+                    if(links.contains(new Link(i, j, i, j + 1))){
                         System.out.print("o --- ");
                     }
                     else{
@@ -78,15 +78,15 @@ public class Board {
             }
 
             //last row
-            if(i == height - 1){
+            if(i == height){
                 return;
             }
 
             //print the |'s line
-            for(int j = 0; j < width; j++){
+            for(int j = 1; j <= width; j++){
                 // last |
-                if(j == width - 1){
-                    if(links.contains(new Link(i + 1, j + 1, i + 2, j + 1))){
+                if(j == width){
+                    if(links.contains(new Link(i, j, i + 1, j))){
                         System.out.println("|");
                     }
                     else{
@@ -95,7 +95,7 @@ public class Board {
                 }
                 else{
                     char playerChar = ' ';
-                    if(links.contains(new Link(i + 1, j + 1, i + 2, j + 1))){
+                    if(links.contains(new Link(i, j, i + 1, j))){
                         System.out.print("|  " + playerChar + "   ");
                     }
                     else{
