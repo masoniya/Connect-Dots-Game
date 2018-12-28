@@ -4,27 +4,33 @@ import java.util.Scanner;
 
 public abstract class Player {
 
-    private String name;
+    protected String name;
+    protected char playerCharacter;
 
     public Player(String name){
+        this(name, name.charAt(0));
+    }
+
+    public Player(String name, char character){
         this.name = name;
+        this.playerCharacter = character;
     }
 
     public abstract void play(Board board);
 
+
+
     public static class HumanPlayer extends Player{
         public HumanPlayer(String name){
             super(name);
-
         }
 
         @Override
         public void play(Board board){
             int x1, x2, y1, y2;
-            boolean done = false;
             Scanner scan = new Scanner(System.in);
 
-            while(!done){
+            while(true){
 
                 System.out.println("Enter first point :");
                 System.out.print("x1 : ");
@@ -63,9 +69,9 @@ public abstract class Player {
 
                 if(x1 == x2 || y1 == y2){
                     System.out.println("Valid Coordinates... Adding Link :");
-                    done = board.addLink(x1, y1, x2, y2);
-                    if(done){
+                    if(board.addLink(x1, y1, x2, y2, this.playerCharacter)){
                         System.out.println("Successfully Entered Link... Returning.");
+                        break;
                     }
                     else{
                         System.out.println("Link Already Exists... ReEnter :");
@@ -74,12 +80,13 @@ public abstract class Player {
                 else{
                     System.out.println("Invalid Coordinates... Coordinates not adjacent. ReEnter :");
                 }
-
             }
+
         }
 
-
     }
+
+
 
     public static class ComputerPlayer extends Player{
         public ComputerPlayer(String name){

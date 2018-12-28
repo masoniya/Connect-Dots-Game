@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class Board {
-    private int width;
-    private int height;
-
-
+    private int width, height;
 
     private HashSet<Link> links;
-    private HashMap<Integer, String> squares;
+
+    private HashMap<Integer, Character> squares;
+
+
 
     public Board(int width, int height){
         this.width = width;
@@ -23,7 +23,7 @@ public class Board {
 
     }
 
-    public boolean addLink(int x1, int y1, int x2, int y2){
+    public boolean addLink(int x1, int y1, int x2, int y2, char playerCharacter){
         Link link;
 
         //horizontal
@@ -55,9 +55,72 @@ public class Board {
         }
 
         links.add(link);
+        checkSquares(link, playerCharacter);
 
         return true;
     }
+
+    private void checkSquares(Link link, char playerCharacter){
+        int x, y, num;
+
+        //horizontal link
+        if(link.x1 == link.x2){
+            //up
+            if(link.x1 != 1){
+                if(links.contains(link.topLeft()) && links.contains(link.topRight()) && links.contains(link.topLeft().topRight())){
+                    x = link.x1 - 1;
+                    y = link.y1;
+                    num = getSquareNumber(x, y);
+                    squares.put(num, playerCharacter);
+                    System.out.println("Adding top square");
+                }
+            }
+
+            //down
+            if(link.x1 != height){
+                if(links.contains(link.bottomLeft()) && links.contains(link.bottormRight()) && links.contains(link.bottomLeft().bottormRight())){
+                    x = link.x1;
+                    y = link.y1;
+                    num = getSquareNumber(x, y);
+                    squares.put(num, playerCharacter);
+                    System.out.println("Adding bottom square");
+                }
+            }
+        }
+
+        //vertical link
+        else{
+            //left
+            if(link.y1 != 1){
+                if(links.contains(link.topLeft()) && links.contains(link.bottomLeft()) && links.contains(link.topLeft().bottomLeft())){
+                    x = link.x1;
+                    y = link.y1 - 1;
+                    num = getSquareNumber(x, y);
+                    squares.put(num, playerCharacter);
+                    System.out.println("Adding left square");
+                }
+            }
+
+            //right
+            if(link.y1 != width){
+                if(links.contains(link.topRight()) && links.contains(link.bottormRight()) && links.contains(link.topRight().bottormRight())){
+                    x = link.x1;
+                    y = link.y1;
+                    num = getSquareNumber(x, y);
+                    squares.put(num, playerCharacter);
+                    System.out.println("Adding right square");
+                }
+            }
+        }
+
+    }
+
+    private int getSquareNumber(int x, int y){
+        return (x - 1) * (width - 1) + y;
+    }
+
+
+
 
     public void printBoard(){
         for(int i = 1; i <= height; i++){
@@ -95,6 +158,10 @@ public class Board {
                 }
                 else{
                     char playerChar = ' ';
+                    int squareNumber;
+                    if(squares.containsKey(squareNumber = getSquareNumber(i, j))){
+                        playerChar = squares.get(squareNumber);
+                    }
                     if(links.contains(new Link(i, j, i + 1, j))){
                         System.out.print("|  " + playerChar + "   ");
                     }
@@ -108,7 +175,6 @@ public class Board {
 
     }
 
-
     int getWidth() {
         return width;
     }
@@ -117,9 +183,7 @@ public class Board {
         return height;
     }
 
-    public HashSet<Link> getLinks() {
-        return links;
-    }
+
 
 
     public class Link {
@@ -130,6 +194,42 @@ public class Board {
             this.y1 = y1;
             this.x2 = x2;
             this.y2 = y2;
+        }
+
+        Link topRight(){
+            if(x1 == x2){
+                 return new Link(x2 - 1, y2, x2, y2);
+            }
+            else{
+                return new Link(x1, y1, x1, y1 + 1);
+            }
+        }
+
+        Link topLeft(){
+            if(x1 == x2){
+                return new Link(x1 - 1, y1, x1, y1);
+            }
+            else{
+                return new Link(x1, y1 - 1, x1, y1);
+            }
+        }
+
+        Link bottormRight(){
+            if(x1 == x2){
+                return new Link(x2, y2, x2 + 1, y2);
+            }
+            else{
+                return new Link(x2, y2, x2, y2 + 1);
+            }
+        }
+
+        Link bottomLeft(){
+            if(x1 == x2){
+                return new Link(x1, y1, x1 + 1, y1);
+            }
+            else{
+                return new Link(x2, y2 - 1, x2, y2);
+            }
         }
 
         @Override
@@ -148,6 +248,7 @@ public class Board {
 
             return Objects.hash(x1, y1, x2, y2);
         }
+
     }
 
 

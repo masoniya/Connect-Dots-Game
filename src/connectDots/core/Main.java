@@ -6,10 +6,14 @@ import connectDots.game.Player;
 public class Main {
 
     public static void main(String[] args){
-        Board board = new Board(3, 3);
+        Board board = new Board(4, 4);
         Player human = new Player.HumanPlayer("human");
-        human.play(board);
+        for(int i = 0; i < 4; i++){
+            human.play(board);
+        }
+
         board.printBoard();
+
 
     }
 }
