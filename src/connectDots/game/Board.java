@@ -88,6 +88,18 @@ public class Board{
                     }
                     continue;
                 }
+                if( i!= height && j == width)
+                {
+
+                    if (!links.contains(new Link(i, j, i, j + 1))) {
+                        Board board = new Board(this);
+                        System.out.println(this.links);
+                        System.out.println(board.links);
+                        board.addLink(i, j, i, j + 1, '0');
+                        boards.add(board);
+                    }
+                    continue;
+                }
                 if (!links.contains(new Link(i, j, i + 1, j))) {
                     Board board = new Board(this);
                     System.out.println(this.links);
