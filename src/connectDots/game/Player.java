@@ -199,7 +199,7 @@ public abstract class Player {
 
 
     }
-    
+
 
     public static class Pair {
         public int choiceEvaluation, choiceIndex;
