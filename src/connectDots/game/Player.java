@@ -9,6 +9,8 @@ import java.util.Scanner;
 public abstract class Player {
     public static int iterations = 0;
 
+    public static int totalIterations = 0;
+
     protected String name;
 
     protected char playerCharacter;
@@ -223,13 +225,13 @@ public abstract class Player {
                 }
             }
         }
-
-
     }
 
 
 
     public static class ComputerPlayer extends Player{
+
+        private DepthGenerator generator;
 
         public ComputerPlayer(String name, char otherPlayerCharacter){
             super(name, otherPlayerCharacter);
@@ -238,22 +240,6 @@ public abstract class Player {
         public ComputerPlayer(String name, char character, char otherPlayerCharacter){
             super(name, character, otherPlayerCharacter);
         }
-
-        private DepthGenerator generator;
-
-        public void initDepthGenerator(int minPos, int maxDepth, int maxPos, int minDepth){
-            generator = new DepthGenerator(minPos, maxDepth, maxPos, minDepth);
-        }
-
-        public double getAppropriateDepth(int possibleMoves){
-            return generator.generateDepth(possibleMoves);
-        }
-
-        /*public void testDepthGenerator(){
-            for(int i = 0; i < 100; i++){
-                System.out.println(i + " : " + (int)getAppropriateDepth(i));
-            }
-        }*/
 
         @Override
         public void play(Board board){
@@ -268,6 +254,10 @@ public abstract class Player {
 
             System.out.println("Iterations for this move : " + iterations);
             iterations = 0;
+        }
+
+        public void initDepthGenerator(int minPos, int maxDepth, int maxPos, int minDepth){
+            generator = new DepthGenerator(minPos, maxDepth, maxPos, minDepth);
         }
 
         public int evaluate(Board board, int depth){
@@ -296,6 +286,7 @@ public abstract class Player {
 
         public Pair minMove(Board board, int depth,int alpha, int beta, int maxDepth) {
             iterations++;
+            totalIterations++;
 
             int bestMoveIndex = 0;
 
@@ -355,6 +346,7 @@ public abstract class Player {
 
         public Pair maxMove(Board board, int depth, int alpha, int beta, int maxDepth) {
             iterations++;
+            totalIterations++;
 
             int bestMoveIndex = 0;
 
@@ -412,7 +404,7 @@ public abstract class Player {
             return new Pair(maxEvaluation, bestMoveIndex);
         }
 
-        public class DepthGenerator {
+        private class DepthGenerator {
             double a;
             double b;
             double minDepth;
@@ -452,5 +444,6 @@ public abstract class Player {
             this.choiceIndex = choiceIndex;
         }
     }
+
 
 }

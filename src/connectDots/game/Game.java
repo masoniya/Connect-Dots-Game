@@ -10,33 +10,43 @@ public abstract class Game {
 
     public static class HumanVsCpuGame extends Game{
         private Player human;
+
         private Player.ComputerPlayer computer;
 
+        //max difficulty is standard AI
+        //each level down is 10% less maxDepth
+        private int difficulty;
 
-        //reduce this to reduce run time
-        private final int minDepth = 3;
 
-        //reduce this to reduce run time
-        private final int minPossibleMoves = 8;
+        //reduce this to reduce run time. this specifies the min depth to look for on any size of board. this helps make the early moves faster
+        private final int minDepth = 2;
 
-        //reduce this to reduce run time
+        //reduce this to reduce run time. this specifies the min possible moves to use the generator. anything below will use max depth
+        private final int minPossibleMoves = 10;
+
+        //this specifies the max depth to traverse and it should equal the min possible moves as it doesn't make sense to traverse more
+        //this can be reduced to reduce AI power
         private final int maxDepth = minPossibleMoves;
 
 
 
-        public HumanVsCpuGame(int width, int height, char humanChar, char computerChar){
-            this(width, height, String.valueOf(humanChar), humanChar, String.valueOf(computerChar), computerChar);
+        public HumanVsCpuGame(int width, int height, char humanChar, char computerChar, int difficulty){
+            this(width, height, String.valueOf(humanChar), humanChar, String.valueOf(computerChar), computerChar, difficulty);
         }
 
-        public HumanVsCpuGame(int width, int height, String humanName, String computerName){
-            this(width, height, humanName, humanName.charAt(0), computerName, computerName.charAt(0));
+        public HumanVsCpuGame(int width, int height, String humanName, String computerName, int difficulty){
+            this(width, height, humanName, humanName.charAt(0), computerName, computerName.charAt(0), difficulty);
         }
 
-        public HumanVsCpuGame(int width, int height, String humanName, char humanChar, String computerName, char computerChar){
+        public HumanVsCpuGame(int width, int height, String humanName, char humanChar, String computerName, char computerChar, int difficulty){
             this.board = new Board(width, height);
             this.human = new Player.HumanPlayer(humanName, humanChar, computerChar);
             this.computer = new Player.ComputerPlayer(computerName, computerChar, humanChar);
-            computer.initDepthGenerator(minPossibleMoves, maxDepth, board.getMaxLinks(), minDepth);
+            if(difficulty > 10 || difficulty < 1){
+                System.out.println("Invalid Difficulty value. Exiting.");
+            }
+            else
+                this.difficulty = difficulty;
         }
 
         private void checkScores(){
@@ -66,7 +76,9 @@ public abstract class Game {
 
         @Override
         public void startGame(){
-            //computer.testDepthGenerator();
+            int difficultyPenalty = maxDepth - ( maxDepth * (10 - difficulty) / 10 );
+
+            computer.initDepthGenerator(minPossibleMoves, difficultyPenalty, board.getMaxLinks(), minDepth);
 
             board.printBoard();
 
@@ -132,7 +144,6 @@ public abstract class Game {
 
 
     }
-
 
 
 }

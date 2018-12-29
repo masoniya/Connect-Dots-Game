@@ -180,7 +180,6 @@ public class Board{
 
 
 
-
     public void printBoard(){
         System.out.println();
         System.out.println("****************************************");
@@ -306,7 +305,6 @@ public class Board{
                 return new Link(x2, y2 - 1, x2, y2);
             }
         }
-
 
         @Override
         public boolean equals(Object o) {
