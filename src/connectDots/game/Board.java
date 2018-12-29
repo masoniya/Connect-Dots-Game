@@ -44,7 +44,6 @@ public class Board{
         return addLink(link.x1, link.y1, link.x2, link.y2, playerCharacter);
     }
 
-
     public boolean addLink(int x1, int y1, int x2, int y2, char playerCharacter){
         Link link;
 
@@ -137,11 +136,19 @@ public class Board{
         return (x - 1) * (width - 1) + y;
     }
 
+    public int getMaxSquares(){
+        return getSquareNumber(height - 1, width - 1);
+    }
+
+    public int getMaxLinks(){
+        return 2 * width * height - width - height;
+    }
+
     public ArrayList<Link> getPossibleMoves(){
         ArrayList<Link> possibleLinks = new ArrayList<>();
         for(int i = 1; i <= height; i++){
             for(int j = 1; j <= width; j++){
-                if(i == width && j == height){
+                if(i == height && j == width){
                     return possibleLinks;
                 }
                 if(j == width){
@@ -154,7 +161,7 @@ public class Board{
                     if(!links.contains(right))
                         possibleLinks.add(right);
                 }
-                else{
+                else {
                     Link down = new Link(i, j, i + 1, j);
                     Link right = new Link(i, j, i, j + 1);
                     if(!links.contains(down))
@@ -164,11 +171,11 @@ public class Board{
                 }
             }
         }
-        return possibleLinks;
+        return null;
     }
 
     public boolean isFullBoard(){
-        return squares.size() == getSquareNumber(width - 1, height - 1);
+        return squares.size() == getMaxSquares();
     }
 
 

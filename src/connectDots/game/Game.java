@@ -8,7 +8,6 @@ public abstract class Game {
 
 
 
-
     public static class HumanVsCpuGame extends Game{
         Player human;
         Player computer;
@@ -23,8 +22,8 @@ public abstract class Game {
 
         public HumanVsCpuGame(int width, int height, String humanName, char humanChar, String computerName, char computerChar){
             this.board = new Board(width, height);
-            this.human = new Player.HumanPlayer(humanName, humanChar);
-            this.computer = new Player.ComputerPlayer(computerName, computerChar);
+            this.human = new Player.HumanPlayer(humanName, humanChar, computerChar);
+            this.computer = new Player.ComputerPlayer(computerName, computerChar, humanChar);
         }
 
         private void checkScores(){
@@ -53,6 +52,9 @@ public abstract class Game {
 
         @Override
         public void startGame(){
+            System.out.println(board.getMaxLinks());
+
+            board.printBoard();
 
             while(true){
 
@@ -89,21 +91,27 @@ public abstract class Game {
                     }
                     System.out.println("Computer got a square. Play again.");
                 }
+                if(board.isFullBoard()){
+                    break;
+                }
 
-
+                /*System.out.println("Human's turn");
+                human.play(board);
+                board.printBoard();
                 if(board.isFullBoard()){
                     System.out.println("Game over");
                     break;
                 }
 
+                System.out.println("Computer's turn");
+                computer.play(board);
+                board.printBoard();
+                if(board.isFullBoard()){
+                    System.out.println("Game over");
+                    break;
+                }*/
             }
 
-            /*if(human.isWin(board)){
-                System.out.println("Human wins");
-            }
-            else{
-                System.out.println("Computer wins");
-            }*/
             checkScores();
 
         }
