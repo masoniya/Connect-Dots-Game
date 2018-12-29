@@ -1,11 +1,9 @@
 package connectDots.game;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
-public class Board {
+public class Board{
     private int width, height;
 
     private HashSet<Link> links;
@@ -21,6 +19,19 @@ public class Board {
         links = new HashSet<>();
         squares = new HashMap<>();
 
+    }
+
+    //copy consructor
+    public Board(Board board)
+    {
+        this.width = board.width;
+        this.height = board.height;
+        this.links = new HashSet<>();
+        for(Link i : this.links)
+        {
+            int x1 = i.x1; int x2 = i.x2; int y1 = i.y1; int y2 = i.y2;
+            this.links.add(new Link(x1,y1,x2,y2));
+        }
     }
 
     public boolean addLink(int x1, int y1, int x2, int y2, char playerCharacter){
@@ -59,6 +70,41 @@ public class Board {
 
         return true;
     }
+
+    public List<Board> getPossibleMoves() throws CloneNotSupportedException {
+        List <Board> boards = new ArrayList<>();
+        for(int i=1; i<= height; i++)
+            for (int j = 1; j <= width; j++) {
+                //corner dot
+                if (i == height && j == width)
+                    break;
+
+                //check if the current dot is at the final line
+                if (i == height && j != width) {
+                    if (!links.contains(new Link(i, j, i + 1, j))) {
+                        Board board = new Board(this);
+                        board.addLink(i, j, i + 1, j, '0');
+                        boards.add(board);
+                    }
+                    continue;
+                }
+                if (!links.contains(new Link(i, j, i + 1, j))) {
+                    Board board = new Board(this);
+                    System.out.println(this.links);
+                    board.addLink(i, j, i + 1, j, '0');
+                    boards.add(board);
+                }
+                if (!links.contains(new Link(i, j, i, j + 1))) {
+                    Board board = new Board(this);
+                    System.out.println(this.links);
+                    System.out.println(board.links);
+                    board.addLink(i, j, i, j + 1, '0');
+                    boards.add(board);
+                }
+            }
+
+        return boards;
+        }
 
     private void checkSquares(Link link, char playerCharacter){
         int x, y, num;

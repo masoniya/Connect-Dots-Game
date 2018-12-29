@@ -5,12 +5,11 @@ import connectDots.game.Player;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws CloneNotSupportedException {
         Board board = new Board(4, 4);
         Player human = new Player.HumanPlayer("human");
-        for(int i = 0; i < 4; i++){
-            human.play(board);
-        }
+        human.play(board);
+        board.getPossibleMoves();
 
         board.printBoard();
 
