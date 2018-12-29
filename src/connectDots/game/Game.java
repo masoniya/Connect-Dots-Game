@@ -9,8 +9,20 @@ public abstract class Game {
 
 
     public static class HumanVsCpuGame extends Game{
-        Player human;
-        Player computer;
+        private Player human;
+        private Player.ComputerPlayer computer;
+
+
+        //reduce this to reduce run time
+        private final int minDepth = 3;
+
+        //reduce this to reduce run time
+        private final int minPossibleMoves = 8;
+
+        //reduce this to reduce run time
+        private final int maxDepth = minPossibleMoves;
+
+
 
         public HumanVsCpuGame(int width, int height, char humanChar, char computerChar){
             this(width, height, String.valueOf(humanChar), humanChar, String.valueOf(computerChar), computerChar);
@@ -24,6 +36,7 @@ public abstract class Game {
             this.board = new Board(width, height);
             this.human = new Player.HumanPlayer(humanName, humanChar, computerChar);
             this.computer = new Player.ComputerPlayer(computerName, computerChar, humanChar);
+            computer.initDepthGenerator(minPossibleMoves, maxDepth, board.getMaxLinks(), minDepth);
         }
 
         private void checkScores(){
@@ -50,9 +63,10 @@ public abstract class Game {
 
         }
 
+
         @Override
         public void startGame(){
-            System.out.println(board.getMaxLinks());
+            //computer.testDepthGenerator();
 
             board.printBoard();
 
@@ -115,6 +129,7 @@ public abstract class Game {
             checkScores();
 
         }
+
 
     }
 

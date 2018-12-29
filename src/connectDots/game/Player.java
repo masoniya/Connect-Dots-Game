@@ -239,21 +239,36 @@ public abstract class Player {
             super(name, character, otherPlayerCharacter);
         }
 
+        private DepthGenerator generator;
+
+        public void initDepthGenerator(int minPos, int maxDepth, int maxPos, int minDepth){
+            generator = new DepthGenerator(minPos, maxDepth, maxPos, minDepth);
+        }
+
+        public double getAppropriateDepth(int possibleMoves){
+            return generator.generateDepth(possibleMoves);
+        }
+
+        /*public void testDepthGenerator(){
+            for(int i = 0; i < 100; i++){
+                System.out.println(i + " : " + (int)getAppropriateDepth(i));
+            }
+        }*/
+
         @Override
         public void play(Board board){
             int bestMoveIndex = 0;
             int alpha = Integer.MIN_VALUE;
             int beta = Integer.MAX_VALUE;
-            //int maxDepth = board.getMaxLinks();
-            int maxDepth = 5;
+            int maxDepth = (int)generator.generateDepth(board.getPossibleMoves().size());
 
             bestMoveIndex = maxMove(board, 0, alpha, beta, maxDepth).choiceIndex;
             Board.Link bestLink = board.getPossibleMoves().get(bestMoveIndex);
             board.addLink(bestLink, playerCharacter);
+
+            System.out.println("Iterations for this move : " + iterations);
+            iterations = 0;
         }
-
-
-
 
         public int evaluate(Board board, int depth){
             int evaluation = 0;
@@ -278,10 +293,6 @@ public abstract class Player {
             }
             return evaluation;
         }
-
-
-
-
 
         public Pair minMove(Board board, int depth,int alpha, int beta, int maxDepth) {
             iterations++;
@@ -342,7 +353,6 @@ public abstract class Player {
             return new Pair(minEvaluation, bestMoveIndex);
         }
 
-
         public Pair maxMove(Board board, int depth, int alpha, int beta, int maxDepth) {
             iterations++;
 
@@ -402,7 +412,35 @@ public abstract class Player {
             return new Pair(maxEvaluation, bestMoveIndex);
         }
 
+        public class DepthGenerator {
+            double a;
+            double b;
+            double minDepth;
+            double maxDepth;
+            double maxPos;
 
+            public DepthGenerator(int minPos, int maxDepth, int maxPos, int minDepth){
+                double x1 = minPos;
+                double y1 = maxDepth;
+                double x2 = maxPos;
+                double y2 = minDepth;
+
+                this.a = (y1 - y2)/Math.log(x1/x2);
+                this.b = Math.exp((y2 * Math.log(x1) - y1 * Math.log(x2))/(y1 - y2));
+                this.minDepth = minDepth;
+                this.maxDepth = maxDepth;
+                this.maxPos = maxPos;
+            }
+
+            public double generateDepth(int possibleMoves){
+                if(possibleMoves > maxPos){
+                    return Math.round(minDepth);
+                }
+                double depth = a * Math.log(b * possibleMoves);
+                return Math.min(Math.round(depth), maxDepth);
+            }
+
+        }
     }
 
 
