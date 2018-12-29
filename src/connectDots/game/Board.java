@@ -93,8 +93,6 @@ public class Board{
 
                     if (!links.contains(new Link(i, j, i, j + 1))) {
                         Board board = new Board(this);
-                        System.out.println(this.links);
-                        System.out.println(board.links);
                         board.addLink(i, j, i, j + 1, '0');
                         boards.add(board);
                     }
@@ -102,14 +100,11 @@ public class Board{
                 }
                 if (!links.contains(new Link(i, j, i + 1, j))) {
                     Board board = new Board(this);
-                    System.out.println(this.links);
                     board.addLink(i, j, i + 1, j, '0');
                     boards.add(board);
                 }
                 if (!links.contains(new Link(i, j, i, j + 1))) {
                     Board board = new Board(this);
-                    System.out.println(this.links);
-                    System.out.println(board.links);
                     board.addLink(i, j, i, j + 1, '0');
                     boards.add(board);
                 }
