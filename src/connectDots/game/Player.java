@@ -1,5 +1,5 @@
 package connectDots.game;
-
+	
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -263,10 +263,12 @@ public abstract class Player {
         public int evaluate(Board board, int depth){
             int evaluation = 0;
             if(isWin(board)){
-                evaluation = Integer.MAX_VALUE - depth;
+                int scoreDifference = getCurrentScore(board) - getOthersCombinedScore(board);
+                evaluation = Integer.MAX_VALUE - board.getMaxSquares() + scoreDifference;
             }
             else if(isLose(board)){
-                evaluation = Integer.MIN_VALUE + depth;
+                int scoreDifference = getCurrentScore(board) - getOthersCombinedScore(board);
+                evaluation = Integer.MIN_VALUE + board.getMaxSquares() + scoreDifference;
             }
             else if(isDraw(board)){
                 evaluation = 0;
